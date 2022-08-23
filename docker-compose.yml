@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  pg-db:
+    container_name: pg-db.interconnect
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_AUTH_DB}
+    ports:
+      - 127.0.0.1:${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - store-pg:/var/lib/postgresql/data
+    networks:
+      - interconnect
+      
+  cache:
+    image: redis:7.0.2-alpine
+    container_name: cache.interconnect
+    restart: always
+    ports:
+      - 127.0.0.1:6379:6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes: 
+      - redis-storage:/data
+    networks:
+      - interconnect
+
+  nginx:
+    image: nginx:stable
+    container_name: nginx.interconnect
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/configs:/etc/nginx/conf.d:ro
+    ports:
+      - 80:80
+    depends_on:
+      - auth-api
+    networks:
+      - interconnect
+
+  auth-api:
+    container_name: auth-api.interconnect
+    build: auth_api/
+    env_file:
+       - .env
+    ports:
+      - 127.0.0.1:$AUTH_API_PORT:$AUTH_API_PORT
+    depends_on:
+      - cache
+      - pg-db
+    networks:
+      - interconnect
+
+volumes:
+  redis-storage:
+    driver: local
+  store-pg: 
+    driver: local
+
+networks:
+  interconnect:
+    driver: bridge

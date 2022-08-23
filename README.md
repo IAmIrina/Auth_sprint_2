@@ -24,7 +24,7 @@
 
 ## Ссылка на репозиторий
 
-[Репозиторий Сервис авторизации](https://github.com/alexshvedov1997/Auth_sprint_1.git)
+[Репозиторий Сервис авторизации](https://github.com/alexshvedov1997/Auth_sprint_2.git)
 
 ## Внешняя Swager Документация
 

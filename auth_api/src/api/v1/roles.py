@@ -83,7 +83,7 @@ class RolesUser(Resource):
         if role in user.roles:
             abort(
                 HTTPStatus.CONFLICT,
-                messages=MSG_USER_ROLE_ALREADY_EXIST.format(user_name=user.login, role_name=role.name),
+                messages=MSG_USER_ROLE_ALREADY_EXIST.format(user_name=user.email, role_name=role.name),
             )
         user.roles.append(role)
         db.session.commit()
@@ -99,7 +99,7 @@ class RolesUser(Resource):
         else:
             abort(
                 HTTPStatus.UNPROCESSABLE_ENTITY,
-                messages=MSG_USER_ROLE_ALREADY_DELETE.format(user_name=user.login, role_name=role.name),
+                messages=MSG_USER_ROLE_ALREADY_DELETE.format(user_name=user.email, role_name=role.name),
             )
         db.session.commit()
         return {}, HTTPStatus.NO_CONTENT

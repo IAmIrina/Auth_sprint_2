@@ -9,17 +9,16 @@ from schemas.profile import UserSchema
 @pytest.fixture
 def test_user(client):
     user_data = {
-        'login': 'Nickname',
+        'email': 'Nickname@domen.ru',
         'password': '1uer84r3r2345',
     }
     personal_data = {
-        'email': 'hello123@gmail.com',
         'first_name': 'Van',
         'second_name': 'Gog',
     }
     personal = UserPersonalData(**personal_data)
     user = User(
-        login=user_data['login'],
+        email=user_data['email'],
         password=pbkdf2_sha256.hash(
             user_data['password']),
         personal_data=personal)
@@ -32,17 +31,16 @@ def test_user(client):
 @pytest.fixture
 def test_user2(client):
     user_data = {
-        'login': 'Second',
+        'email': 'second@user.ru',
         'password': 'yr74r74rte6',
     }
     personal_data = {
-        'email': 'hdhdh@gmail.com',
         'first_name': 'Wal De',
         'second_name': 'Mort',
     }
     personal = UserPersonalData(**personal_data)
     user = User(
-        login=user_data['login'],
+        email=user_data['email'],
         password=pbkdf2_sha256.hash(
             user_data['password']),
         personal_data=personal)

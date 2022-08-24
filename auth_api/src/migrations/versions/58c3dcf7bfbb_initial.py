@@ -1,16 +1,16 @@
-"""empty message
+"""Initial
 
-Revision ID: 820086c70896
+Revision ID: 58c3dcf7bfbb
 Revises: 
-Create Date: 2022-08-16 06:53:43.831369
+Create Date: 2022-08-24 07:17:25.639215
 
 """
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '820086c70896'
+revision = '58c3dcf7bfbb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,12 +26,21 @@ def upgrade():
     )
     op.create_table('user',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
-    sa.Column('login', sa.String(), nullable=False),
+    sa.Column('email', sa.String(), nullable=False),
     sa.Column('password', sa.String(), nullable=False),
     sa.Column('date_joined', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('login')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('id')
+    )
+    op.create_table('social_account',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('social_id', sa.Text(), nullable=False),
+    sa.Column('social_name', sa.Text(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('social_id', 'social_name', name='social_pk')
     )
     op.create_table('user_history',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
@@ -47,7 +56,6 @@ def upgrade():
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
     sa.Column('first_name', sa.String(), nullable=True),
     sa.Column('second_name', sa.String(), nullable=True),
-    sa.Column('email', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),
@@ -67,6 +75,7 @@ def downgrade():
     op.drop_table('user_role')
     op.drop_table('user_personal_data')
     op.drop_table('user_history')
+    op.drop_table('social_account')
     op.drop_table('user')
     op.drop_table('role')
     # ### end Alembic commands ###

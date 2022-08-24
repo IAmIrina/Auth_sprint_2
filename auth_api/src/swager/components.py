@@ -2,9 +2,6 @@ components = {
     "PersonalData": {
         "type": "object",
         "properties": {
-            "email": {
-                "type": "string",
-            },
             "first_name": {
                 "type": "string",
             },
@@ -28,7 +25,7 @@ components = {
           "type": "object",
           "properties": {
               "id": {"type": "string"},
-              "login": {"type": "string"},
+              "email": {"type": "string"},
               "personal_data": {
                     "$ref": "#/definitions/PersonalData"
               },
@@ -43,7 +40,7 @@ components = {
     "UserRegisterSchema": {
         "type": "object",
         "properties": {
-            "login": {
+            "email": {
                 "type": "string",
             },
             "password": {
@@ -57,7 +54,7 @@ components = {
     "ChangeProfile": {
         "type": "object",
         "properties": {
-            "login": {
+            "email": {
                 "type": "string",
             },
             "password": {
@@ -127,7 +124,7 @@ components = {
     "Login": {
         "type": "object",
         "properties": {
-            "login": {
+            "email": {
                 "type": "string",
             },
             "password": {

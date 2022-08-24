@@ -5,7 +5,6 @@ from typing import Tuple
 from core.message_constants import (
     MSG_INVALID_CREDENTIALS,
     MSG_PASSWORD_CHANGED,
-    MSG_USER_NOT_FOUND,
 )
 from db.storage import db
 from flasgger import swag_from
@@ -13,10 +12,10 @@ from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource, abort
 from marshmallow.exceptions import ValidationError
-from models.user import User
 from passlib.hash import pbkdf2_sha256
 from schemas.auth import ChangePassword
 from swager.auth import change_password
+from utils.model_func import get_user
 
 
 class Password(Resource):
@@ -33,9 +32,7 @@ class Password(Resource):
             abort(HTTPStatus.UNPROCESSABLE_ENTITY, message=exc.messages)
 
         user_identity = get_jwt_identity()
-        user = User.query.get(user_identity.get('id'))
-        if not user:
-            abort(HTTPStatus.NOT_FOUND, message=MSG_USER_NOT_FOUND)
+        user = get_user(user_identity.get('id'))
 
         if not pbkdf2_sha256.verify(passwords['old'], user.password):
             abort(HTTPStatus.UNAUTHORIZED, message=MSG_INVALID_CREDENTIALS)

@@ -4,21 +4,20 @@ import pytest
 from flask_jwt_extended import decode_token
 
 
-@pytest.mark.parametrize("login, password, email, first_name, second_name",
+@pytest.mark.parametrize("email, password, first_name, second_name",
                          [
-                             ('Spiderman', '48y73t4rr6t', 'tholland@google.com', 'Tom', 'Holland'),
-                             ('Spiderman', '48y73t4rr6t', 'tholland@google.com', '', ''),
+                             ('tholland@google.com', '48y73t4rr6t', 'Tom', 'Holland'),
+                             ('tholland@google.com', '48y73t4rr6t', '', ''),
                          ]
                          )
-def test_register(client, login, password, email, first_name, second_name):
+def test_register(client, email, password, first_name, second_name):
     """Create new user."""
     res = client.post(
         '/user/profile',
         json={
-            'login': login,
+            'email': email,
             'password': password,
             'personal_data': {
-                'email': email,
                 'first_name': first_name,
                 'second_name': second_name,
             }
@@ -27,28 +26,26 @@ def test_register(client, login, password, email, first_name, second_name):
     new_user = res.json
     personal_data = new_user.get('personal_data') if new_user.get('personal_data') else {}
     assert new_user.get('id') is not None
-    assert personal_data.get('email') == email
     assert personal_data.get('first_name') == first_name
     assert personal_data.get('second_name') == second_name
     assert personal_data.get('passwors') is None
     assert res.status_code == HTTPStatus.CREATED
 
 
-@pytest.mark.parametrize("login, password, email, first_name, second_name",
+@pytest.mark.parametrize("email, password, first_name, second_name",
                          [
-                             ('', '48y73t4rr6t', 'tholland@google.com', 'Tom', 'Holland'),
-                             (None, '48y73t4rr6t', 'tholland@google.com', 'Tom', 'Holland')
+                             ('', '48y73t4rr6t', 'Tom', 'Holland'),
+                             (None, '48y73t4rr6t', 'Tom', 'Holland')
                          ]
                          )
-def test_no_login_register(client, login, password, email, first_name, second_name):
+def test_no_email_register(client, email, password, first_name, second_name):
     """Create new user."""
     res = client.post(
         '/user/profile',
         json={
-            'login': login,
+            'email': email,
             'password': password,
             'personal_data': {
-                'email': email,
                 'first_name': first_name,
                 'second_name': second_name,
             }
@@ -60,7 +57,7 @@ def test_no_login_register(client, login, password, email, first_name, second_na
 def test_login_user(client, test_user):
     """Login endpoint."""
     res = client.post(
-        "/login", auth=(test_user["login"], test_user["password"]))
+        "/login", auth=(test_user["email"], test_user["password"]))
 
     assert res.status_code == HTTPStatus.OK
     access_token = res.json.get('access_token')
@@ -81,9 +78,9 @@ def test_login_user(client, test_user):
 
 
 def test_wrong_password(client, test_user):
-    """Wrong password login."""
+    """Wrong password email."""
     res = client.post(
-        "/login", auth=(test_user["login"], 'WRONG_PASSWORD'))
+        "/login", auth=(test_user["email"], 'WRONG_PASSWORD'))
     assert res.status_code == HTTPStatus.UNAUTHORIZED
 
 

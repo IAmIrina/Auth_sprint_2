@@ -6,17 +6,15 @@ from schemas.profile import UserSchema
 
 
 @click.command(name="create_superuser")
-@click.argument("login")
 @click.argument("password")
 @click.argument("email")
 @with_appcontext
-def create_superuser(login: str, password: str, email: str):
+def create_superuser(password: str, email: str):
     role_name = 'Admin'
     user_schema = UserSchema()
     register = {
-        "login": login,
+        "email": email,
         "password": password,
-        "personal_data": {"email": email}
     }
     user = user_schema.load(register)
     role = Role.query.filter_by(name=role_name).first()

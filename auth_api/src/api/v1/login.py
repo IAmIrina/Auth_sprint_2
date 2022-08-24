@@ -5,7 +5,6 @@ from core.access import create_token_pair
 from core.message_constants import (
     MSG_INTERNAL_SERVER_ERROR,
     MSG_INVALID_CREDENTIALS,
-    MSG_USER_NOT_FOUND,
     MSG_TOKEN_REVOKED,
 )
 from db.cache_engine import (
@@ -21,6 +20,7 @@ from flask_restful import Resource, abort
 from models.user import User, UserHistory
 from passlib.hash import pbkdf2_sha256
 from swager.auth import login, logout, refresh
+from utils.model_func import get_user
 
 
 class Login(Resource):
@@ -36,7 +36,7 @@ class Login(Resource):
         if not auth:
             abort(HTTPStatus.UNAUTHORIZED, message=MSG_INVALID_CREDENTIALS)
 
-        user = User.query.filter_by(login=auth.username).first()
+        user = User.query.filter_by(email=auth.username).first()
 
         if user:
             if pbkdf2_sha256.verify(auth.password, user.password):
@@ -81,9 +81,7 @@ class Refresh(Resource):
         cache_key = jwt_refresh_cache.gen_cache_key(**identity)
         jwt_refresh_cache.delete(cache_key)
 
-        user = User.query.filter_by(id=identity['id']).first()
-        if not user:
-            abort(HTTPStatus.NOT_FOUND, message=MSG_USER_NOT_FOUND)
+        user = get_user(identity['id'])
 
         identity, tokens = create_token_pair(user)
         return tokens, HTTPStatus.OK

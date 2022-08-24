@@ -14,7 +14,7 @@ user_role = db.Table(
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
-    login = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     date_joined = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.utcnow)
     personal_data = db.relationship('UserPersonalData', backref='user', uselist=False, lazy='joined')
@@ -31,7 +31,6 @@ class UserPersonalData(db.Model):
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'), unique=True)
     first_name = db.Column(db.String)
     second_name = db.Column(db.String)
-    email = db.Column(db.String, nullable=False, unique=True)
 
     def __repr__(self):
         return f'User details {self.first_name} {self.second_name}'

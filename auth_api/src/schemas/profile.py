@@ -1,4 +1,4 @@
-from core.constants import LOGIN_REGEX, PASSWORD_REGEX
+from core.constants import PASSWORD_REGEX
 from marshmallow import Schema, fields, post_dump, post_load, validate
 from models.user import User, UserPersonalData
 from passlib.hash import pbkdf2_sha256
@@ -8,7 +8,6 @@ from schemas.roles import RoleSchema
 class UserPersonalDataSchema(Schema):
     first_name = fields.String()
     second_name = fields.String()
-    email = fields.Email()
 
     @post_load
     def create_personaldata(self, data, **kwargs):
@@ -16,19 +15,18 @@ class UserPersonalDataSchema(Schema):
 
 
 class ProfileChangeSchema(Schema):
-    login = fields.String()
     personal_data = fields.Nested(UserPersonalDataSchema)
 
 
 class UserSchema(Schema):
     id = fields.UUID()
-    login = fields.String()
+    email = fields.Email()
     password = fields.String(validate=validate.Regexp(PASSWORD_REGEX))
     personal_data = fields.Nested(UserPersonalDataSchema)
     roles = fields.Nested(RoleSchema, many=True, required=False)
 
     class Meta:
-        fields = ('id', 'login', 'password', 'personal_data', 'roles')
+        fields = ('id', 'email', 'password', 'personal_data', 'roles')
         ordered = True
 
     @post_dump
@@ -43,12 +41,12 @@ class UserSchema(Schema):
 
 
 class UserRegisterSchema(Schema):
-    login = fields.String(required=True, validate=validate.Regexp(LOGIN_REGEX))
+    email = fields.Email(required=True)
     password = fields.String(required=True, validate=validate.Regexp(PASSWORD_REGEX))
     personal_data = fields.Nested(UserPersonalDataSchema)
 
     class Meta:
-        fields = ('id', 'login', 'password', 'personal_data')
+        fields = ('id', 'email', 'password', 'personal_data')
         ordered = True
 
     @post_load

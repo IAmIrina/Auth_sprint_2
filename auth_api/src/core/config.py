@@ -4,6 +4,7 @@ from core.settings import settings
 class DefaultConfig():
     CSRF_ENABLED = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = settings.secret_key
     JWT_SECRET_KEY = settings.jwt_secret_key
     JWT_ACCESS_TOKEN_EXPIRES = settings.jwt_access_token_expires
     JWT_REFRESH_TOKEN_EXPIRES = settings.jwt_refresh_token_expires
@@ -14,6 +15,11 @@ class DefaultConfig():
         port=settings.postgres.port,
         db_name=settings.postgres.dbname,
     )
+    VK_CLIENT_ID = settings.vk_client_id
+    VK_CLIENT_SECRET = settings.vk_client_secret
+    GOOGLE_CLIENT_ID = settings.google_client_id
+    GOOGLE_CLIENT_SECRET = settings.google_client_secret
+
     PAGINATE_PAGE_SIZE = 50
     PAGINATE_PAGE_PARAM = "page"
     PAGINATE_SIZE_PARAM = "size"

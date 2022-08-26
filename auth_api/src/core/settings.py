@@ -58,5 +58,12 @@ class Settings(DotEnvMixin):
     jwt_access_token_expires = Field(timedelta(minutes=30))
     jwt_refresh_token_expires = Field(timedelta(days=10))
 
+    vk_client_id: str
+    vk_client_secret: str
+    google_client_id: str
+    google_client_secret: str
+
+    secret_key: str
+
 
 settings = Settings()

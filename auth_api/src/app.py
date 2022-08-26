@@ -1,19 +1,23 @@
+from flasgger import Swagger
+from flask import Flask
+from flask_migrate import Migrate
+from flask_restful import Api
+
 from api.v1.check_roles import CheckRoles
 from api.v1.login import Login, Logout, Refresh
 from api.v1.password import Password
 from api.v1.profile import Profile
 from api.v1.roles import Roles, RolesUser
+from api.v1.socials.google import google
+from api.v1.socials.vk import vkontakte
 from api.v1.user import UserActivity
 from core import config
 from core.commands import create_superuser
 from core.pagination import pagination
 from core.settings import settings
+from core.socials.oauth import oauth
 from db import redis
 from db.storage import db
-from flasgger import Swagger
-from flask import Flask
-from flask_migrate import Migrate
-from flask_restful import Api
 from swager.config import TEMPLATE
 from utils.authentication import jwt
 
@@ -34,10 +38,12 @@ def create_app(config=config.DefaultConfig):
     from models import user
 
     migrate.init_app(app, db)
-
+    oauth.init_app(app)
     pagination.init_app(app, db)
     jwt.init_app(app)
 
+    app.register_blueprint(vkontakte)
+    app.register_blueprint(google)
     api.add_resource(Login, '/login')
     api.add_resource(Profile, '/user/profile')
     api.add_resource(Logout, '/logout')

@@ -14,3 +14,4 @@ MSG_USER_ROLE_ALREADY_DELETE = 'User {user_name} Role {role_name} already delete
 MSG_INVALID_URL = 'Invalid url'
 MSG_EMAIL_NOT_FOUND = 'Email not found'
 MSG_EMPTY_EMAIL = 'Empty email'
+MSG_SOCIAL_NETWORK_ERROR = 'Error to authorize user.'

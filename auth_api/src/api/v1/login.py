@@ -18,7 +18,6 @@ from flask import request
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource, abort
 from models.user import User, UserHistory
-from passlib.hash import pbkdf2_sha256
 from swager.auth import login, logout, refresh
 from utils.model_func import get_user
 
@@ -39,8 +38,8 @@ class Login(Resource):
         user = User.query.filter_by(email=auth.username).first()
 
         if user:
-            if pbkdf2_sha256.verify(auth.password, user.password):
-                identity, tokens = create_token_pair(user, fresh=True)
+            if user.verify_password(auth.password):
+                _, tokens = create_token_pair(user, fresh=True)
                 user.history.append(UserHistory(browser=str(request.user_agent)))
                 db.session.commit()
                 return tokens, HTTPStatus.OK

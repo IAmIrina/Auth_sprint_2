@@ -1,4 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema
+
 from models.user import UserHistory
 
 

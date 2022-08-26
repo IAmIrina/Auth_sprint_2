@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from core.constants import PASSWORD_REGEX
 from marshmallow import Schema, fields, post_dump, validate
+
+from core.constants import PASSWORD_REGEX
 
 
 class ChangePassword(Schema):

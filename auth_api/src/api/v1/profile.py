@@ -1,15 +1,13 @@
 from http import HTTPStatus
 
-from core.message_constants import (
-    MSG_EMAIL_NOT_FOUND,
-    MSG_USER_ALREADY_EXISTS,
-)
-from db.storage import db
 from flasgger import swag_from
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource, abort
 from marshmallow.exceptions import ValidationError
+
+from core.message_constants import MSG_EMAIL_NOT_FOUND, MSG_USER_ALREADY_EXISTS
+from db.storage import db
 from models.user import User, UserPersonalData
 from schemas.profile import ProfileChangeSchema, UserRegisterSchema, UserSchema
 from swager.profile import get_user_info, user_change_schema, user_register

@@ -1,5 +1,6 @@
 """VK Social Login Routes."""
 from http import HTTPStatus
+import logging
 
 from flask import Blueprint, request, url_for
 from flask_restful import abort
@@ -9,6 +10,7 @@ from core.socials.oauth import oauth
 from core.socials.social_auth import SocialAuth
 
 SOCIAL_NAME = 'vk'
+VK_API_VERSION = '5.131'
 
 vkontakte = Blueprint('vkontakte', __name__, url_prefix=f'/{SOCIAL_NAME}')
 
@@ -25,12 +27,13 @@ def authorize():
     social = oauth.create_client(SOCIAL_NAME)
 
     token = social.authorize_access_token()
-    resp = social.get('users.get', params={'v': '5.131'})
+    resp = social.get('users.get', params={'v': VK_API_VERSION})
     try:
         response = resp.json()
         response = response.get('response')
         user_info = response[0]
     except BaseException:
+        logging.exception('Error social login: %s', SOCIAL_NAME)
         abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
 
     try:
@@ -42,6 +45,7 @@ def authorize():
             user_agent=str(request.user_agent),
         )
     except BaseException:
+        logging.exception('Error social login: %s', SOCIAL_NAME)
         abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
 
     social = SocialAuth(SOCIAL_NAME)

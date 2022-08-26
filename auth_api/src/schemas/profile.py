@@ -1,7 +1,7 @@
-from core.constants import PASSWORD_REGEX
 from marshmallow import Schema, fields, post_dump, post_load, validate
+
+from core.constants import FAKE_MAIL_DOMAIN, PASSWORD_REGEX
 from models.user import User, UserPersonalData
-from passlib.hash import pbkdf2_sha256
 from schemas.roles import RoleSchema
 
 
@@ -32,11 +32,12 @@ class UserSchema(Schema):
     @post_dump
     def remove_password_field(self, data, **kwargs):
         data.pop('password', None)
+        if data['email'].endswith(FAKE_MAIL_DOMAIN):
+            data['email'] = None
         return data
 
     @post_load
     def create_profile(self, data, **kwargs):
-        data['password'] = pbkdf2_sha256.hash(data['password'])
         return User(**data)
 
 
@@ -51,5 +52,4 @@ class UserRegisterSchema(Schema):
 
     @post_load
     def create_profile(self, data, **kwargs):
-        data['password'] = pbkdf2_sha256.hash(data['password'])
         return User(**data)

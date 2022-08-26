@@ -2,7 +2,6 @@ import pytest
 from app import db
 from core.access import create_token_pair
 from models.user import User, UserPersonalData
-from passlib.hash import pbkdf2_sha256
 from schemas.profile import UserSchema
 
 
@@ -17,11 +16,7 @@ def test_user(client):
         'second_name': 'Gog',
     }
     personal = UserPersonalData(**personal_data)
-    user = User(
-        email=user_data['email'],
-        password=pbkdf2_sha256.hash(
-            user_data['password']),
-        personal_data=personal)
+    user = User(**user_data, personal_data=personal)
     db.session.add(user)
     db.session.commit()
     user = UserSchema().dump(user)
@@ -39,11 +34,7 @@ def test_user2(client):
         'second_name': 'Mort',
     }
     personal = UserPersonalData(**personal_data)
-    user = User(
-        email=user_data['email'],
-        password=pbkdf2_sha256.hash(
-            user_data['password']),
-        personal_data=personal)
+    user = User(**user_data, personal_data=personal)
     db.session.add(user)
     db.session.commit()
     user = UserSchema().dump(user)

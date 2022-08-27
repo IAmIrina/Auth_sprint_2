@@ -62,6 +62,8 @@ class Settings(DotEnvMixin):
     vk_client_secret: str
     google_client_id: str
     google_client_secret: str
+    yandex_client_id: str
+    yandex_client_secret: str
 
     secret_key: str
 

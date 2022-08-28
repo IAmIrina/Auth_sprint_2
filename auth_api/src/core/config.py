@@ -21,6 +21,8 @@ class DefaultConfig():
     GOOGLE_CLIENT_SECRET = settings.google_client_secret
     YANDEX_CLIENT_ID = settings.yandex_client_id
     YANDEX_CLIENT_SECRET = settings.yandex_client_secret
+    MAIL_CLIENT_ID = settings.mail_client_id
+    MAIL_CLIENT_SECRET = settings.mail_client_secret
 
     PAGINATE_PAGE_SIZE = 50
     PAGINATE_PAGE_PARAM = "page"

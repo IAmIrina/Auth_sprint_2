@@ -50,3 +50,16 @@ yandex = oauth.register(
         'scope': 'login:info login:email'
     }
 )
+
+mail = oauth.register(
+    name='mail',
+    access_token_params=None,
+    access_token_url='https://oauth.mail.ru/token',
+    authorize_params=None,
+    authorize_url='https://oauth.mail.ru/login',
+    userinfo_endpoint='https://oauth.mail.ru/userinfo',
+    client_kwargs={
+        'scope': 'userinfo'
+    },
+)
+

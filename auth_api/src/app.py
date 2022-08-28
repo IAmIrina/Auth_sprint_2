@@ -10,6 +10,7 @@ from api.v1.profile import Profile
 from api.v1.roles import Roles, RolesUser
 from api.v1.socials.google import google
 from api.v1.socials.vk import vkontakte
+from api.v1.socials.yandex import yandex
 from api.v1.user import UserActivity
 from core import config
 from core.commands import create_superuser
@@ -44,6 +45,7 @@ def create_app(config=config.DefaultConfig):
 
     app.register_blueprint(vkontakte)
     app.register_blueprint(google)
+    app.register_blueprint(yandex)
     api.add_resource(Login, '/login')
     api.add_resource(Profile, '/user/profile')
     api.add_resource(Logout, '/logout')

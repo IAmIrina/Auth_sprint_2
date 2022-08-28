@@ -38,3 +38,15 @@ vk = oauth.register(
     compliance_fix=vk_compliance_fix,
     token_endpoint_auth_method='client_secret_post',
 )
+
+yandex = oauth.register(
+    name='yandex',
+    access_token_params=None,
+    access_token_url='https://oauth.yandex.ru/token',
+    authorize_params=None,
+    userinfo_endpoint='https://login.yandex.ru/info',
+    authorize_url='https://oauth.yandex.ru/authorize',
+    client_kwargs={
+        'scope': 'login:info login:email'
+    }
+)

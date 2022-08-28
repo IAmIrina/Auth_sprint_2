@@ -19,6 +19,8 @@ class DefaultConfig():
     VK_CLIENT_SECRET = settings.vk_client_secret
     GOOGLE_CLIENT_ID = settings.google_client_id
     GOOGLE_CLIENT_SECRET = settings.google_client_secret
+    YANDEX_CLIENT_ID = settings.yandex_client_id
+    YANDEX_CLIENT_SECRET = settings.yandex_client_secret
 
     PAGINATE_PAGE_SIZE = 50
     PAGINATE_PAGE_PARAM = "page"

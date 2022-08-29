@@ -64,6 +64,8 @@ class Settings(DotEnvMixin):
     google_client_secret: str
     yandex_client_id: str
     yandex_client_secret: str
+    mail_client_id: str
+    mail_client_secret: str
 
     secret_key: str
 

@@ -11,7 +11,9 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params=None,
     api_base_url='https://www.googleapis.com/oauth2/v1/',
-    client_kwargs={'scope': 'email profile'},
+    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+    client_kwargs={'scope': 'openid email profile'},
+    jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
 )
 
 
@@ -33,7 +35,6 @@ vk = oauth.register(
     authorize_url='https://oauth.vk.com/authorize',
     authorize_params=None,
     api_base_url='https://api.vk.com/method/',
-    userinfo_endpoint='https://api.vk.com/method/users.get',
     client_kwargs={'scope': 'email'},
     compliance_fix=vk_compliance_fix,
     token_endpoint_auth_method='client_secret_post',
@@ -57,9 +58,7 @@ mail = oauth.register(
     access_token_url='https://oauth.mail.ru/token',
     authorize_params=None,
     authorize_url='https://oauth.mail.ru/login',
-    userinfo_endpoint='https://oauth.mail.ru/userinfo',
     client_kwargs={
         'scope': 'userinfo'
     },
 )
-

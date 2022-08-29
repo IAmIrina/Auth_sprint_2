@@ -25,10 +25,10 @@ def login():
 def authorize():
 
     social = oauth.create_client(SOCIAL_NAME)
-    token = social.authorize_access_token()
-    resp = social.get('userinfo')
     try:
-        user_info = resp.json()
+        token = social.authorize_access_token()
+        oauth.google.userinfo()
+        user_info = social.userinfo()
     except BaseException:
         logging.exception('Error social login: %s', SOCIAL_NAME)
         abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
@@ -37,7 +37,7 @@ def authorize():
             first_name=user_info.get('given_name'),
             last_name=user_info.get('family_name'),
             email=user_info.get('email'),
-            social_id=user_info.get('id'),
+            social_id=user_info.get('sub'),
             user_agent=str(request.user_agent),
         )
     except BaseException:

@@ -1,8 +1,8 @@
-"""empty message
+"""Initial
 
-Revision ID: 4535b0dc3079
+Revision ID: baefed595f0e
 Revises: 
-Create Date: 2022-08-26 08:55:27.774908
+Create Date: 2022-09-01 15:45:35.828002
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '4535b0dc3079'
+revision = 'baefed595f0e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,12 +45,18 @@ def upgrade():
     op.create_table('user_history',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('browser', sa.String(), nullable=False),
+    sa.Column('logged_in_at', sa.DateTime(), nullable=True),
     sa.Column('date', sa.DateTime(timezone=True), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('user_device_type', sa.Text(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id')
+    sa.PrimaryKeyConstraint('id', 'user_device_type'),
+    sa.UniqueConstraint('id', 'user_device_type'),
+    postgresql_partition_by='LIST (user_device_type)'
     )
+    op.execute("CREATE TABLE IF NOT EXISTS user_history_pc PARTITION OF user_history FOR VALUES IN ('pc')")
+    op.execute("CREATE TABLE IF NOT EXISTS user_history_other PARTITION OF user_history FOR VALUES IN ('other')")
+    op.execute("CREATE TABLE IF NOT EXISTS user_history_mobile PARTITION OF user_history FOR VALUES IN ('mobile')")
     op.create_table('user_personal_data',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),

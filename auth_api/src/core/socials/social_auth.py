@@ -10,6 +10,7 @@ from flask_restful import abort
 from core.access import create_token_pair
 from core.constants import FAKE_MAIL_DOMAIN, PASSWORD_LEN
 from core.message_constants import MSG_SOCIAL_NETWORK_ERROR
+from utils.parse_user_agent import get_device_type
 from db.storage import db
 from models.user import SocialAccount, User, UserHistory, UserPersonalData
 from utils.model_func import get_user_by_email, get_user_by_social
@@ -81,7 +82,7 @@ class SocialAuth():
         db.session.commit()
 
     def save_log(self, user: User, user_agent: str) -> None:
-        user.history.append(UserHistory(browser=user_agent))
+        user.history.append(UserHistory(browser=user_agent, user_device_type=get_device_type(user_agent)))
         db.session.commit()
 
     def generate_password(self) -> None:

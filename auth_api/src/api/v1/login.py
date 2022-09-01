@@ -20,6 +20,7 @@ from flask_restful import Resource, abort
 from models.user import User, UserHistory
 from swager.auth import login, logout, refresh
 from utils.model_func import get_user
+from utils.parse_user_agent import get_device_type
 
 
 class Login(Resource):
@@ -40,7 +41,12 @@ class Login(Resource):
         if user:
             if user.verify_password(auth.password):
                 _, tokens = create_token_pair(user, fresh=True)
-                user.history.append(UserHistory(browser=str(request.user_agent)))
+                user_agent = str(request.user_agent)
+                user.history.append(
+                    UserHistory(
+                        browser=user_agent,
+                        user_device_type=get_device_type(user_agent),
+                    ))
                 db.session.commit()
                 return tokens, HTTPStatus.OK
 

@@ -3,8 +3,11 @@ from datetime import datetime
 
 from passlib.hash import pbkdf2_sha256
 from db.storage import db
+from core.constants import DEVICES
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.hybrid import hybrid_property
+
 
 user_role = db.Table(
     'user_role',
@@ -68,15 +71,37 @@ class SocialAccount(db.Model):
         return f'<SocialAccount {self.social_name}:{self.user_id}>'
 
 
+def create_partition(target, connection, **kw) -> None:
+    """Creating partition by user_history."""
+    table = 'user_history'
+    query = """CREATE TABLE IF NOT EXISTS {partition} PARTITION OF {table} FOR VALUES IN ('{device}')"""
+    for device in DEVICES:
+        stmt = query.format(
+            partition=f'{table}_{device}',
+            table=table,
+            device=device,
+        )
+        connection.execute(stmt)
+
+
 class UserHistory(db.Model):
     __tablename__ = 'user_history'
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    __table_args__ = (
+        UniqueConstraint('id', 'user_device_type'),
+        {
+            'postgresql_partition_by': 'LIST (user_device_type)',
+            'listeners': [('after_create', create_partition)],
+        }
+    )
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, nullable=False)
     browser = db.Column(db.String, nullable=False)
+    logged_in_at = db.Column(db.DateTime, default=datetime.utcnow)
     date = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.utcnow)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'))
+    user_device_type = db.Column(db.Text, primary_key=True)
 
     def __repr__(self):
-        return f'User history {self.id}'
+        return f'User_history {self.id}'
 
 
 class Role(db.Model):

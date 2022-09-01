@@ -22,6 +22,7 @@ from db import redis
 from db.storage import db
 from swager.config import TEMPLATE
 from utils.authentication import jwt
+from utils.limiter import limiter
 
 migrate = Migrate()
 swagger = Swagger(template=TEMPLATE)
@@ -36,6 +37,7 @@ def create_app(config=config.DefaultConfig):
     app.cli.add_command(create_superuser)
     redis.client.init_app(app)
     db.init_app(app)
+    limiter.init_app(app)
 
     from models import user
 

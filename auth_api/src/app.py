@@ -1,7 +1,8 @@
 from flasgger import Swagger
-from flask import Flask
+from flask import Flask, request
 from flask_migrate import Migrate
 from flask_restful import Api
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
 from api.v1.check_roles import CheckRoles
 from api.v1.login import Login, Logout, Refresh
@@ -18,6 +19,7 @@ from core.commands import create_superuser
 from core.pagination import pagination
 from core.settings import settings
 from core.socials.oauth import oauth
+from core.tracer import request_hook
 from db import redis
 from db.storage import db
 from swager.config import TEMPLATE
@@ -28,8 +30,8 @@ swagger = Swagger(template=TEMPLATE)
 
 
 def create_app(config=config.DefaultConfig):
-
     app = Flask(__name__)
+    FlaskInstrumentor().instrument_app(app, request_hook=request_hook)
     api = Api(app)
     swagger.init_app(app)
     app.config.from_object(config)
@@ -56,7 +58,6 @@ def create_app(config=config.DefaultConfig):
     api.add_resource(Roles, '/roles', '/roles/<uuid:role_id>')
     api.add_resource(UserActivity, '/user/user_history')
     api.add_resource(CheckRoles, '/user/check_roles')
-
     api.add_resource(RolesUser, '/users/<uuid:user_id>/roles', '/users/<uuid:user_id>/roles/<uuid:role_id>')
 
     return app
@@ -64,4 +65,12 @@ def create_app(config=config.DefaultConfig):
 
 if __name__ == '__main__':
     app = create_app()
+
+    @app.before_request
+    def before_request():
+        print(request.headers)
+        request_id = request.headers.get('X-Request-Id')
+        if not request_id:
+            raise RuntimeError('X-Request-Id is required.')
+
     app.run(host=settings.host, port=settings.port)

@@ -1,7 +1,8 @@
 
 from http import HTTPStatus
+from json import loads
 
-from core.access import access_required
+from core.access import check_secret_key
 from core.message_constants import (
     MSG_ACCESS_TOKEN_NOT_FOUND,
     MSG_INVALID_TOKEN,
@@ -9,7 +10,7 @@ from core.message_constants import (
 )
 from flasgger import swag_from
 from flask import request
-from flask_jwt_extended import decode_token, jwt_required
+from flask_jwt_extended import decode_token
 from flask_restful import Resource, abort
 from jwt.exceptions import DecodeError
 from models.user import User
@@ -20,10 +21,9 @@ from swager.profile import check_roles
 class CheckRoles(Resource):
 
     @swag_from(check_roles)
-    @jwt_required()
-    @access_required()
+    @check_secret_key
     def post(self):
-        data = request.json
+        data = loads(request.json)
         access_token = data.get("access_token")
         if not access_token:
             abort(HTTPStatus.NOT_FOUND, messages=MSG_ACCESS_TOKEN_NOT_FOUND)

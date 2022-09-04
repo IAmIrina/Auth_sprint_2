@@ -28,7 +28,7 @@ def auth(name):
     if not client:
         abort(HTTPStatus.NOT_FOUND, message=MSG_SOCIAL_NOT_SUPPORTED.format(name=name))
     token = client.authorize_access_token()
-    user_info = client.userinfo(params={'access_token': token['access_token']})
+    user_info = client.userinfo(params={'access_token': token.get('access_token')})
     for social in SOCIALS:
         if social.name == name:
             user_info = social.parse_user_info(user_info=user_info, token=token)

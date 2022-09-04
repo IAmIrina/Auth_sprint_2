@@ -84,6 +84,7 @@ class Settings(DotEnvMixin):
     mail: OauthServiceProvider = get_service_provider_params('mail')
     yandex: OauthServiceProvider = get_service_provider_params('yandex')
     secret_key: str
+    async_secret_key: str
 
 
 settings = Settings()

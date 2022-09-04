@@ -9,10 +9,7 @@ from api.v1.login import Login, Logout, Refresh
 from api.v1.password import Password
 from api.v1.profile import Profile
 from api.v1.roles import Roles, RolesUser
-from api.v1.socials.google import google
-from api.v1.socials.vk import vkontakte
-from api.v1.socials.yandex import yandex
-from api.v1.socials.mail import mail
+from api.v1.social import socials
 from api.v1.user import UserActivity
 from core import config
 from core.commands import create_superuser
@@ -46,10 +43,7 @@ def create_app(config=config.DefaultConfig):
     pagination.init_app(app, db)
     jwt.init_app(app)
 
-    app.register_blueprint(vkontakte)
-    app.register_blueprint(google)
-    app.register_blueprint(yandex)
-    app.register_blueprint(mail)
+    app.register_blueprint(socials)
     api.add_resource(Login, '/login')
     api.add_resource(Profile, '/user/profile')
     api.add_resource(Logout, '/logout')
@@ -68,7 +62,6 @@ if __name__ == '__main__':
 
     @app.before_request
     def before_request():
-        print(request.headers)
         request_id = request.headers.get('X-Request-Id')
         if not request_id:
             raise RuntimeError('X-Request-Id is required.')

@@ -11,13 +11,13 @@ def test_google_auth_new_user(mock_user_info, mock_authorize_access_token, clien
         email='bp@gmail.com',
         sub='id_12345678',
     )
-    mock_authorize_access_token.return_value = MagicMock(status_code=200)
+    mock_authorize_access_token.return_value.status_code = HTTPStatus.OK
     mock_user_info.return_value = test_user_data
 
-    response = client.get('/google/login')
+    response = client.get('/socials/login/google')
     assert response.status_code == HTTPStatus.FOUND
 
-    response = client.get('/google/authorize')
+    response = client.get('/socials/auth/google')
     tokens = response.json
 
     assert response.status_code == HTTPStatus.OK
@@ -33,13 +33,13 @@ def test_google_auth_user_already_exists(mock_user_info, mock_authorize_access_t
         email=test_user['email'],
         sub='id_12345678',
     )
-    mock_authorize_access_token.return_value = MagicMock(status_code=200)
+    mock_authorize_access_token.return_value.status_code = HTTPStatus.OK
     mock_user_info.return_value = test_user_data
 
-    response = client.get('/google/login')
+    response = client.get('/socials/login/google')
     assert response.status_code == HTTPStatus.FOUND
 
-    response = client.get('/google/authorize')
+    response = client.get('/socials/auth/google')
     tokens = response.json
 
     assert response.status_code == HTTPStatus.OK

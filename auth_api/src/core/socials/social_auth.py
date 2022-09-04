@@ -1,6 +1,7 @@
 """VK Social Login class."""
 import string
 import uuid
+from dataclasses import dataclass
 from http import HTTPStatus
 from secrets import choice as secrets_choice
 from typing import Tuple
@@ -10,10 +11,20 @@ from flask_restful import abort
 from core.access import create_token_pair
 from core.constants import FAKE_MAIL_DOMAIN, PASSWORD_LEN
 from core.message_constants import MSG_SOCIAL_NETWORK_ERROR
-from utils.parse_user_agent import get_device_type
 from db.storage import db
 from models.user import SocialAccount, User, UserHistory, UserPersonalData
 from utils.model_func import get_user_by_email, get_user_by_social
+from utils.parse_user_agent import get_device_type
+
+
+@dataclass
+class SocialUser:
+    """Social User schema."""
+    first_name: str
+    last_name: str
+    email: str
+    social_id: str
+    user_agent: str = None
 
 
 class SocialAuth():
@@ -22,33 +33,27 @@ class SocialAuth():
     def __init__(self, social_name: str) -> None:
         self.social = social_name
 
-    def authorize(
-        self,
-        social_id: str,
-        user_agent: str,
-        email: str = None,
-        first_name: str = None,
-        last_name: str = None,
-    ) -> dict:
+    def authorize(self, social_user: SocialUser) -> dict:
 
-        if not social_id:
+        if not social_user.social_id:
             abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
 
-        user, tokens = self.search_in_social_account(social_id)
+        user, tokens = self.search_in_social_account(social_user.social_id)
 
         if user:
-            self.save_log(user, user_agent)
+            self.save_log(user, social_user.user_agent)
             return tokens
 
-        if email:
-            user, tokens = self.search_in_users(email)
+        if social_user.email:
+            user, tokens = self.search_in_users(social_user.email)
             if user:
-                self.save_social_account(user, social_id)
-                self.save_log(user, user_agent)
+                self.save_social_account(user, social_user.social_id)
+                self.save_log(user, social_user.user_agent)
                 return tokens
-        user, tokens = self.register_user(email=email, first_name=first_name, last_name=last_name)
-        self.save_social_account(user, social_id)
-        self.save_log(user, user_agent)
+        user, tokens = self.register_user(
+            email=social_user.email, first_name=social_user.first_name, last_name=social_user.last_name)
+        self.save_social_account(user, social_user.social_id)
+        self.save_log(user, social_user.user_agent)
         return tokens
 
     def search_in_social_account(self, social_id: str) -> Tuple[User, dict]:

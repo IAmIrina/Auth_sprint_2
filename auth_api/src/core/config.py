@@ -16,14 +16,14 @@ class DefaultConfig():
         port=settings.postgres.port,
         db_name=settings.postgres.dbname,
     )
-    VK_CLIENT_ID = settings.vk_client_id
-    VK_CLIENT_SECRET = settings.vk_client_secret
-    GOOGLE_CLIENT_ID = settings.google_client_id
-    GOOGLE_CLIENT_SECRET = settings.google_client_secret
-    YANDEX_CLIENT_ID = settings.yandex_client_id
-    YANDEX_CLIENT_SECRET = settings.yandex_client_secret
-    MAIL_CLIENT_ID = settings.mail_client_id
-    MAIL_CLIENT_SECRET = settings.mail_client_secret
+    VK_CLIENT_ID = settings.vk.client_id
+    VK_CLIENT_SECRET = settings.vk.client_secret
+    GOOGLE_CLIENT_ID = settings.google.client_id
+    GOOGLE_CLIENT_SECRET = settings.google.client_secret
+    YANDEX_CLIENT_ID = settings.yandex.client_id
+    YANDEX_CLIENT_SECRET = settings.yandex.client_secret
+    MAIL_CLIENT_ID = settings.mail.client_id
+    MAIL_CLIENT_SECRET = settings.mail.client_secret
 
     PAGINATE_PAGE_SIZE = 50
     PAGINATE_PAGE_PARAM = "page"

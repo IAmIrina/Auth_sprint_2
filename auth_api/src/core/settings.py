@@ -1,6 +1,7 @@
 """Project settings."""
 
 from datetime import timedelta
+from distutils.command.config import config
 
 from pydantic import BaseSettings, Field
 
@@ -46,6 +47,26 @@ class TestPostgresSettings(DotEnvMixin):
     connect_timeout: int = 1
 
 
+class OauthServiceProvider(DotEnvMixin):
+    client_id: str
+    client_secret: str
+    access_token_url: str
+    access_token_params: str = None
+    authorize_url: str
+    authorize_params: str = None
+    api_base_url: str = None
+    userinfo_endpoint: str
+    token_endpoint_auth_method: str = 'client_secret_basic'
+    client_kwargs: dict
+
+
+def get_service_provider_params(name):
+    class Provider(OauthServiceProvider):
+        class Config:
+            env_prefix = f'{name}_'
+    return Provider()
+
+
 class Settings(DotEnvMixin):
 
     redis: RedisSettings = RedisSettings()
@@ -58,16 +79,10 @@ class Settings(DotEnvMixin):
     jwt_access_token_expires = Field(timedelta(minutes=30))
     jwt_refresh_token_expires = Field(timedelta(days=10))
 
-    vk_client_id: str
-    vk_client_secret: str
-    google_client_id: str
-    google_client_secret: str
-    yandex_client_id: str
-    yandex_client_secret: str
-    mail_client_id: str
-    mail_client_secret: str
-    async_secret_key: str = Field(env='ASYNC_SECRET_KEY')
-
+    google: OauthServiceProvider = get_service_provider_params('google')
+    vk: OauthServiceProvider = get_service_provider_params('vk')
+    mail: OauthServiceProvider = get_service_provider_params('mail')
+    yandex: OauthServiceProvider = get_service_provider_params('yandex')
     secret_key: str
 
 

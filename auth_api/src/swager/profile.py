@@ -1,3 +1,5 @@
+from core.constants import DEVICES
+
 user_register = {
   "summary":  "Регистрация пользователя",
   "tags": ["profile"],
@@ -58,6 +60,12 @@ user_history = {
     "summary": "История активности пользователя",
     "tags": ["profile"],
     "parameters": [
+        {
+            "in": "query",
+            "name": "device",
+            "schema": {"type": "string"},
+            "description":  f"Required device type: {','.join(DEVICES)}"
+        },
         {
             "in": "query",
             "name": "page",

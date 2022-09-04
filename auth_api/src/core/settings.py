@@ -66,6 +66,7 @@ class Settings(DotEnvMixin):
     yandex_client_secret: str
     mail_client_id: str
     mail_client_secret: str
+    async_secret_key: str = Field(env='ASYNC_SECRET_KEY')
 
     secret_key: str
 

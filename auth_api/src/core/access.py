@@ -10,9 +10,11 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt_identity,
 )
+from flask import request
 from flask_restful import abort
 from models.user import User
 from schemas.auth import JWTSchema
+from core.settings import settings
 
 
 def create_token_pair(user: User, fresh=False) -> Tuple[dict, str]:
@@ -44,4 +46,15 @@ def access_required(roles: list = ["Admin"]):
             return fn(*args, **kwargs)
 
         return decorated_view
+    return wrapper
+
+
+def check_secret_key(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        secret_key = request.headers.get('Authorization')
+        if not secret_key or secret_key != settings.async_secret_key:
+            abort(HTTPStatus.FORBIDDEN, message=MSG_FORBIDDEN)
+        result = func(*args, **kwargs)
+        return result
     return wrapper

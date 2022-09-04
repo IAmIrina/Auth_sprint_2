@@ -26,6 +26,12 @@ TEMPLATE = {
       "in": "header",
       "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\". In the input enter the following text: Bearer {access_token}."
     },
+    "Secret_key": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Secret internal key to communicate microservice"
+    },
     "BasicAuth": {"type": "basic"},
     "OAuth2Mail": {
       "type": "oauth2",

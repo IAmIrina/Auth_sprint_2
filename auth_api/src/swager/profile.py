@@ -82,6 +82,11 @@ user_history = {
 check_roles = {
     "summary": "Список ролей у пользователя",
     "tags": ["user_role"],
+    "security": [
+        {
+            "Secret_key": []
+        }
+    ],
     "parameters": [
         {
             "name": "token",

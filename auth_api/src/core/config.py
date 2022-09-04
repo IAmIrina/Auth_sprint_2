@@ -2,6 +2,7 @@ from core.settings import settings
 
 
 class DefaultConfig():
+    FLASK_APP = 'AUTH'
     CSRF_ENABLED = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = settings.secret_key

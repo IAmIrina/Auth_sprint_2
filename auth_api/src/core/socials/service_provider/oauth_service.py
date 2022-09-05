@@ -19,10 +19,9 @@ class OauthServiceProvider(ABC):
         pass
 
     @staticmethod
-    @abstractmethod
     def get_userinfo_params(**kwargs) -> dict:
         """Dinamic request params for userinfo endpoint."""
-        pass
+        return {}
 
     @abstractmethod
     def get_params(self) -> dict:

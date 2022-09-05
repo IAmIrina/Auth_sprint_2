@@ -27,5 +27,12 @@ class MailRu(OauthServiceProvider):
             abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
         return user_data
 
+    def get_userinfo_params(**kwargs) -> dict:
+        """Dinamic request params for userinfo endpoint."""
+        token = kwargs.pop('token')
+        if token:
+            return {'access_token': token.get('access_token')}
+        return {}
+
     def get_params(self):
-        return dict(name='mail', **settings.mail.dict())
+        return dict(name=self.name, **settings.mail.dict())

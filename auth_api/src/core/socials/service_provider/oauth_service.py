@@ -9,13 +9,22 @@ class OauthServiceProvider(ABC):
     @property
     @abstractmethod
     def name(self):
+        """Service provider name."""
         pass
 
     @staticmethod
     @abstractmethod
     def parse_user_info(user_info: dict, token: dict) -> SocialUser:
+        """Transform user info to approptiate format."""
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def get_userinfo_params(**kwargs) -> dict:
+        """Dinamic request params for userinfo endpoint."""
         pass
 
     @abstractmethod
-    def get_params(self):
+    def get_params(self) -> dict:
+        """Service provider settings."""
         pass

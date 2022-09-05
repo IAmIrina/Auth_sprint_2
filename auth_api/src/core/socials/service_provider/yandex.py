@@ -27,9 +27,5 @@ class Yandex(OauthServiceProvider):
             abort(HTTPStatus.BAD_GATEWAY, message=MSG_SOCIAL_NETWORK_ERROR)
         return user_data
 
-    def get_userinfo_params(**kwargs) -> dict:
-        """Dinamic request params for userinfo endpoint."""
-        return {}
-
     def get_params(self):
         return dict(name=self.name, **settings.yandex.dict())

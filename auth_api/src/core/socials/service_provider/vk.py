@@ -44,9 +44,5 @@ class VKontakte(OauthServiceProvider):
             return resp
         session.register_compliance_hook('access_token_response', _fix)
 
-    def get_userinfo_params(**kwargs) -> dict:
-        """Dinamic request params for userinfo endpoint."""
-        return {}
-
     def get_params(self):
         return dict(name=self.name, **settings.vk.dict(), compliance_fix=VKontakte.compliance_fix)

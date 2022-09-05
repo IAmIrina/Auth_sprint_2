@@ -1,7 +1,7 @@
 import pytest
 from app import db
 from core.access import create_token_pair
-from models.user import User, UserPersonalData
+from models.user import User, UserPersonalData, UserHistory
 from schemas.profile import UserSchema
 
 
@@ -59,3 +59,11 @@ def revoked_client_token(client, authorized_client):
     _ = client.delete(
         "/logout", headers=authorized_client)
     return authorized_client
+
+
+@pytest.fixture
+def test_user_history(test_user):
+    log = dict(user_id=test_user['id'], browser='Chrome', user_device_type='pc')
+    db.session.add(UserHistory(**log))
+    db.session.commit()
+    return log

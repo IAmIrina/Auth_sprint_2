@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from unittest.mock import MagicMock
 
 
 def test_vk_auth_new_user(mock_user_info, mock_authorize_access_token, client):

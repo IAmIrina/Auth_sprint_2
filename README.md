@@ -1,4 +1,4 @@
-# Project work: "Authorization for Online Cinema.".
+# Project work: "Authorization for Online Cinema".
 
 
 [Repository Async Search Cinema](https://github.com/IAmIrina/Async_API_sprint_2.git) which implements middleware to check users roles in this authorization service.

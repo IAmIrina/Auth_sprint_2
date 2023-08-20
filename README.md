@@ -1,84 +1,98 @@
-# Проектная работа 7 спринта
+# Project work: "Authorization for Online Cinema.".
 
-Ссылка на репозиторий Async Cinema https://github.com/IAmIrina/Async_API_sprint_2.git, в котором реализован Middleware с проверкой прав пользователя в Auth.
 
-## Сервис авторизации
+[Repository Async Search Cinema](https://github.com/IAmIrina/Async_API_sprint_2.git) which implements middleware to check users roles in this authorization service.
 
-Предназначен для регистрации пользователей и управлением ролями пользователей.
 
-## Используемые технологии
-Протокол REST API.
-Код приложения на Python + Flask.
-Приложение запускается под управлением сервера ASGI(guvicorn).
-В качестве хранилища используется PostgreSQL.
-Для кеширования используется Redis.
-Для функционального тестирования используется pytest.
-Подключен Jaeger.
-Реализован Docker для запуска.
+## Auhorization service
 
-Компоненты системы: Postgress, Redis, Nginx, Jaeger, Docker-Compose.
 
-Доп.инфо: реализован троттлинг и партицирование для таблицы входов.
+Designed for user registration and user role management.
 
-## Ссылка на репозиторий
 
-[Репозиторий Сервис авторизации](https://github.com/alexshvedov1997/Auth_sprint_2.git)
+## Applied technology
+- Protocol REST API
+- Python + Flask
+- ASGI(guvicorn)
+- PostgreSQL as user data storage
+- Redis as cache
+- pytest
+- Jaeger
+- Docker
 
-## Внешняя Swager Документация
+
+Components: Postgres, Redis, Nginx, Jaeger, Docker-Compose.
+
+
+Implement throtling and partitions for the logging table.
+
+
+
+##  Swager documentation
+
 
 [Swagger](http://127.0.0.1/apidocs)
 
+
 ## Style guide
-Минимум, который необходимо соблюдать:
-- [PEP8](https://peps.python.org/pep-0008/)  +  [Google Style Guide](https://google.github.io/styleguide/pyguide.html)
+- [PEP8](https://peps.python.org/pep-0008/)  +  [Google Style Guide](https://google.github.io/styleguide/pyguide.html)
 
 
-## Инструкция по разворачиванию сервиса
 
-Склонировать репозиторий
+## How to deploy service
+
+
+Clone repository:
 ```
 git clone https://github.com/alexshvedov1997/Auth_sprint_1.git
 ```
-Скопировать файл:  
+Copy file:  
 ```
 cp .env.example .env
 ```
-Отредактировать переменные окружения в файле .env любимым редактором. 
+Set your environment variables in .env file with any editor.
 
-### Развернуть сервис в режиме DEV
 
-В режими DEV:
-- API под управлением встроенное сервера Flask.
-- Миграция базы данных.
+### Deploy in DEV mode.
+
+
+DEV mode:
+- API starts under the internal Flask service.
+- Database migration.
+
 
 ```
 sudo make dev
 ```
 
-### Развернуть сервис в режиме PROD
-В режими DEV запускается API под управлением Guvicorn с патчем для асинхронки.
+
+### Deploy in PROD mode
+API starts under the Gunicorn server with an async patch in PROD mode.
+
 
 ```
 sudo make up
 ```
-или в detach режиме
+or detach mode
 ```
 sudo make up_detach
 ```
 
-### Запустить тесты
+
+### Run tests
 ```
 sudo make test
 ```
 
-### Команда на создание суперпользователя
+
+### Command to create a superuser
 
 
-Пример комманды
+Example:
 flask create_superuser <str: login> <str: password> <str: email>
 
-flask create_superuser Tom hollabd holland@mail.ru
 
-Запускать команду из папки где app.py
+flask create_superuser Tom Holland holland@mail.ru
 
 
+Run the command in a folder that contains app.py file
